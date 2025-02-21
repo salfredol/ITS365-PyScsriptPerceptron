@@ -1,1 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perceptron Demo</title>
+    <style>
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, 50px);
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Perceptron Input Grid</h2>
+
+    <div class="grid">
+        <!-- Generate 16 dropdowns (4x4) -->
+        <select class="input"><option value="0">0</option><option value="1">1</option></select>
+        <select class="input"><option value="0">0</option><option value="1">1</option></select>
+        <select class="input"><option value="0">0</option><option value="1">1</option></select>
+        <select class="input"><option value="0">0</option><option value="1">1</option></select>
+
+        <select class="input"><option value="0">0</option><option value="1">1</option></select>
+        <select class="input"><option value="0">0</option><option value="1">1</option></select>
+        <select class="input"><option value="0">0</option><option value="1">1</option></select>
+        <select class="input"><option value="0">0</option><option value="1">1</option></select>
+
+        <select class="input"><option value="0">0</option><option value="1">1</option></select>
+        <select class="input"><option value="0">0</option><option value="1">1</option></select>
+        <select class="input"><option value="0">0</option><option value="1">1</option></select>
+        <select class="input"><option value="0">0</option><option value="1">1</option></select>
+
+        <select class="input"><option value="0">0</option><option value="1">1</option></select>
+        <select class="input"><option value="0">0</option><option value="1">1</option></select>
+        <select class="input"><option value="0">0</option><option value="1">1</option></select>
+        <select class="input"><option value="0">0</option><option value="1">1</option></select>
+    </div>
+
+    <button onclick="runPerceptron()">Run Perceptron</button>
+
+    <h3>Output: <span id="output">-</span></h3>
+
+    <script>
+        function runPerceptron() {
+            let inputs = document.querySelectorAll(".input");
+            let inputValues = Array.from(inputs).map(select => parseInt(select.value));
+
+            // Replace with actual perceptron logic
+            let output = inputValues.reduce((sum, val) => sum + val, 0) > 8 ? 1 : 0;
+
+            document.getElementById("output").textContent = output;
+        }
+    </script>
+
+</body>
+</html>
 
