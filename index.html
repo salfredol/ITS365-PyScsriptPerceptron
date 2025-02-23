@@ -49,28 +49,48 @@
     <py-script>
         import numpy as np
         from pyodide import create_proxy, js
-        
-        weights = np.array([0.0, -0.01, -0.02, -0.01, 0.01, 0.0, -0.01, 0.0, 0.01, 0.0, -0.01, 0.0, 0.01, 0.01, 0.01, 0.01])
-        bias = 0.0
 
         def activation_function(z):
-            return 1 if z >= 0 else 0
+            return np.where(z >= 0, 1, 0)
 
-        def run_perceptron(inputs):
-            inputs = np.array(inputs)
-            linear_sum = np.dot(inputs, weights) + bias
-            return activation_function(linear_sum)
+        def fit(X_train, y_train):
+            weights = np.zeros(16)
+            bias = 0
+            learning_rate = 0.01
+
+            for _ in range(1000):
+                for idx, x_i in enumerate(X_train):
+                    linear_product = np.dot(x_i, weights) + bias
+                    y_pred = activation_function(linear_product)
+                    loss = y_pred - y_train[idx]
+                    update = learning_rate * loss
+                    weights = weights - update * x_i
+                    bias = bias - update
+
+            return weights, bias
+
+        def predict(X_test, weights, bias):
+            linear_product = np.dot(X_test, weights) + bias
+            y_pred = activation_function(linear_product)
+            return y_pred
 
         def get_input_and_run(event):
             inputs = []
-            # Gather input values from the dropdowns (the 16 select elements)
+
             for i in range(16):
                 input_value = int(js.document.getElementById(f'input_{i}').value)
                 inputs.append(input_value)
+
+            X_test = np.array(inputs).reshape(1, 16)
             
-            output = run_perceptron(inputs)
-        
-            js.document.getElementById("output").textContent = str(output)
+            X_train = np.array([[1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0]])  # Example 4x4 flattened input (1x16)
+            y_train = np.array([1])  # Example label (L)
+
+            weights, bias = fit(X_train, y_train)
+
+            output = predict(X_test, weights, bias)
+
+            js.document.getElementById("output").textContent = str(output[0])
 
         run_button = js.document.getElementById("run-btn")
         run_button.addEventListener("click", create_proxy(get_input_and_run))
