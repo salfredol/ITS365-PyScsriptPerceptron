@@ -12,50 +12,66 @@
             margin-bottom: 10px;
         }
     </style>
+
+    <link rel="stylesheet" href="https://pyscript.net/alpha/pyscript.css">
+    <script defer src="https://pyscript.net/alpha/pyscript.js"></script>
 </head>
 <body>
 
-    <h2>Perceptron Input Grid</h2>
+    <h2>Perceptron Input</h2>
 
     <div class="grid">
-        <!-- Generate 16 dropdowns (4x4) -->
-        <select class="input"><option value="0">0</option><option value="1">1</option></select>
-        <select class="input"><option value="0">0</option><option value="1">1</option></select>
-        <select class="input"><option value="0">0</option><option value="1">1</option></select>
-        <select class="input"><option value="0">0</option><option value="1">1</option></select>
+        <select class="input" id="input_0"><option value="0">0</option><option value="1">1</option></select>
+        <select class="input" id="input_1"><option value="0">0</option><option value="1">1</option></select>
+        <select class="input" id="input_2"><option value="0">0</option><option value="1">1</option></select>
+        <select class="input" id="input_3"><option value="0">0</option><option value="1">1</option></select>
 
-        <select class="input"><option value="0">0</option><option value="1">1</option></select>
-        <select class="input"><option value="0">0</option><option value="1">1</option></select>
-        <select class="input"><option value="0">0</option><option value="1">1</option></select>
-        <select class="input"><option value="0">0</option><option value="1">1</option></select>
+        <select class="input" id="input_4"><option value="0">0</option><option value="1">1</option></select>
+        <select class="input" id="input_5"><option value="0">0</option><option value="1">1</option></select>
+        <select class="input" id="input_6"><option value="0">0</option><option value="1">1</option></select>
+        <select class="input" id="input_7"><option value="0">0</option><option value="1">1</option></select>
 
-        <select class="input"><option value="0">0</option><option value="1">1</option></select>
-        <select class="input"><option value="0">0</option><option value="1">1</option></select>
-        <select class="input"><option value="0">0</option><option value="1">1</option></select>
-        <select class="input"><option value="0">0</option><option value="1">1</option></select>
+        <select class="input" id="input_8"><option value="0">0</option><option value="1">1</option></select>
+        <select class="input" id="input_9"><option value="0">0</option><option value="1">1</option></select>
+        <select class="input" id="input_10"><option value="0">0</option><option value="1">1</option></select>
+        <select class="input" id="input_11"><option value="0">0</option><option value="1">1</option></select>
 
-        <select class="input"><option value="0">0</option><option value="1">1</option></select>
-        <select class="input"><option value="0">0</option><option value="1">1</option></select>
-        <select class="input"><option value="0">0</option><option value="1">1</option></select>
-        <select class="input"><option value="0">0</option><option value="1">1</option></select>
+        <select class="input" id="input_12"><option value="0">0</option><option value="1">1</option></select>
+        <select class="input" id="input_13"><option value="0">0</option><option value="1">1</option></select>
+        <select class="input" id="input_14"><option value="0">0</option><option value="1">1</option></select>
+        <select class="input" id="input_15"><option value="0">0</option><option value="1">1</option></select>
     </div>
 
-    <button onclick="runPerceptron()">Run Perceptron</button>
+    <button id="run-btn">Run Perceptron</button>
 
     <h3>Output: <span id="output">-</span></h3>
 
-    <script>
-        function runPerceptron() {
-            let inputs = document.querySelectorAll(".input");
-            let inputValues = Array.from(inputs).map(select => parseInt(select.value));
+    <py-script>
+        import numpy as np
 
-            // Replace with actual perceptron logic
-            let output = inputValues.reduce((sum, val) => sum + val, 0) > 8 ? 1 : 0;
+        # hard-coded weights and bias
+        weights = np.array([0.0, -0.01, -0.02, -0.01, 0.01, 0.0, -0.01, 0.0, 0.01, 0.0, -0.01, 0.0, 0.01, 0.01, 0.01, 0.01])
+        bias = 0.0
 
-            document.getElementById("output").textContent = output;
-        }
-    </script>
+        def activation_function(z):
+            return 1 if z >= 0 else 0
+
+        def run_perceptron(inputs):
+            inputs = np.array(inputs)
+            linear_sum = np.dot(inputs, weights) + bias
+            return activation_function(linear_sum)
+
+        def get_input_and_run():
+            inputs = []
+            for i in range(16):
+                input_value = int(document.getElementById(f'input_{i}').value)
+                inputs.append(input_value)
+           
+            output = run_perceptron(inputs)
+            document.getElementById("output").textContent = output
+
+        document.getElementById("run-btn").onclick = get_input_and_run
+    </py-script>
 
 </body>
 </html>
-
