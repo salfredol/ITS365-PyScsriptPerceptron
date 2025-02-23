@@ -48,8 +48,8 @@
 
     <py-script>
         import numpy as np
-
-        # hard-coded weights and bias
+        from pyodide import create_proxy, js
+        
         weights = np.array([0.0, -0.01, -0.02, -0.01, 0.01, 0.0, -0.01, 0.0, 0.01, 0.0, -0.01, 0.0, 0.01, 0.01, 0.01, 0.01])
         bias = 0.0
 
@@ -61,16 +61,19 @@
             linear_sum = np.dot(inputs, weights) + bias
             return activation_function(linear_sum)
 
-        def get_input_and_run():
+        def get_input_and_run(event):
             inputs = []
+            # Gather input values from the dropdowns (the 16 select elements)
             for i in range(16):
-                input_value = int(document.getElementById(f'input_{i}').value)
+                input_value = int(js.document.getElementById(f'input_{i}').value)
                 inputs.append(input_value)
-           
+            
             output = run_perceptron(inputs)
-            document.getElementById("output").textContent = output
+        
+            js.document.getElementById("output").textContent = str(output)
 
-        document.getElementById("run-btn").onclick = get_input_and_run
+        run_button = js.document.getElementById("run-btn")
+        run_button.addEventListener("click", create_proxy(get_input_and_run))
     </py-script>
 
 </body>
