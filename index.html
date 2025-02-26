@@ -12,10 +12,6 @@
             margin-bottom: 10px;
         }
     </style>
-
-    <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css">
-    <script defer src="https://pyscript.net/latest/pyscript.js"></script>
-
 </head>
 <body>
 
@@ -47,35 +43,28 @@
 
     <h3>Output: <span id="output">-</span></h3>
 
-    <py-script>
-        import numpy as np
-        from pyodide import create_proxy, js
+    <script>
+        const weights = [0.0, -0.01, -0.02, -0.01, 0.01, 0.0, -0.01, 0.0, 0.01, 0.0, -0.01, 0.0, 0.01, 0.01, 0.01, 0.01];
+        const bias = 0.0;
 
-        weights = np.array([0.0, -0.01, -0.02, -0.01, 0.01, 0.0, -0.01, 0.0, 0.01, 0.0, -0.01, 0.0, 0.01, 0.01, 0.01, 0.01])
-        bias = 0.0
+        function activationFunction(z) {
+            return z >= 0 ? 1 : 0;
+        }
 
-        def activation_function(z):
-            return np.where(z >= 0, 1, 0)
+        function runPerceptron() {
+            let inputs = [];
+            for (let i = 0; i < 16; i++) {
+                inputs.push(parseInt(document.getElementById(`input_${i}`).value));
+            }
 
-        def predict(inputs):
-            inputs = np.array(inputs)
-            linear_product = np.dot(inputs, weights) + bias
-            y_pred = activation_function(linear_product)
-            return y_pred
+            let linearSum = inputs.reduce((sum, val, index) => sum + val * weights[index], bias);
+            let output = activationFunction(linearSum);
 
-        def get_input_and_run(event):
-            inputs = []
-            for i in range(16):
-                input_value = int(js.document.getElementById(f'input_{i}').value)
-                inputs.append(input_value)
+            document.getElementById("output").textContent = output;
+        }
 
-            output = predict(inputs)
-
-            js.document.getElementById("output").textContent = str(output[0])
-
-        run_button = js.document.getElementById("run-btn")
-        run_button.addEventListener("click", create_proxy(get_input_and_run))
-    </py-script>
+        document.getElementById("run-btn").addEventListener("click", runPerceptron);
+    </script>
 
 </body>
 </html>
